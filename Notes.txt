@@ -1,7 +1,60 @@
-To Do:
+﻿To Do:
 
--Update view when new city is added.
+CLIENT
+	site.js
+	Buttons to Add
+		Forecast
+		-Refresh Forecast: Put Forecast
 
-- Configure Put & Delete in site.js & Location Controller
+		Location
+		-Delete Location: Delete Location & Delete Forecasts
 
-- Make App Look good
+	Functionality
+		On Login
+			-Get Locations
+			-Fetch Forecast from External API
+			-Get Forecast from Server, Check Creation Date vs. Current Time.  Used in Put Forecasts also
+			-Put Forecast If Older
+
+		Forecast
+			-Get
+			-Post
+			-Put.  Check Creation Date vs. Current Time.  Used in Login
+			-Delete.  Used in Delete Location
+
+		✓Location
+			✓-Get
+			✓-Put			
+			✓-Delete
+
+		Search Bar
+			-Search by City
+
+SERVER
+	MODEL
+		Forecast
+			-Add Creation Date of Forecast Parameter
+			-New Migration
+
+CONTROLLER
+	Location
+		✓-Configure Put 
+		✓-Configure Delete
+	Forecast
+		-Configure Get
+		-Configure Post
+		-Configure Put
+		-Configure Delete
+
+VIEW
+	Buttons
+		-Delete Location
+		-Refresh Forecast
+
+	Asthetics 
+		-Make App Look good
+	
+	Refresh Functionality
+		-Update View functionality
+
+

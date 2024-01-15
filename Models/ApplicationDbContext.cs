@@ -15,6 +15,7 @@ namespace Weekly_Weather.Models
         }
         public DbSet<User> User { get; set; }
         public DbSet<Location> Location { get; set; }
+        public DbSet<Forecast> Forecast { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

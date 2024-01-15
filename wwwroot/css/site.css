@@ -19,7 +19,13 @@ html {
 
 body {
     margin-bottom: 60px;
+    background-color: #63b5f1;
 }
+
+/* .forecast-display {
+    border: 1px solid #ccc;
+    margin: 10px;
+}*/
 
 
 

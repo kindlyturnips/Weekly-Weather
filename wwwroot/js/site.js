@@ -4,7 +4,7 @@
 // Global array to store multiple locations
 var locations = [];
 
-//Update Locati
+//Update Location
 document.addEventListener("DOMContentLoaded", function () {
     var forecastElements = document.querySelectorAll('.forecast-display');
 
@@ -12,10 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
         var city = element.getAttribute('data-city');
         var latitude = element.getAttribute('data-lat');
         var longitude = element.getAttribute('data-lon');
-
-        console.log("LatLon")
-        console.log(latitude);
-        console.log(longitude);
 
         fetchWeatherForecast(latitude, longitude)
             .then(data => {
@@ -85,8 +81,17 @@ function geocodeAddress() {
     }
 }
 
+ 
+async function Test() {
+    console.log("TEST");
+    const get_locations = await getLocation();
+    console.log("Test Data 1:", get_locations);
+    deleteLocation(get_locations[0].locationId)
+    
+
+}
 //////////////////////////////////////////////////////////////////////////////////////
-//          CLIENT EXTERNAL API FUNCTIONALITY                                       //
+//          CLIENT -> EXTERNAL API FUNCTIONALITY                                    //
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -168,31 +173,27 @@ function displayForecast(forecastData, element) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////
-//          CLIENT SERVER FUNCTIONALITY                                             //
+//          CLIENT -> SERVER LOCATION FUNCTIONALITY                                 //
 //////////////////////////////////////////////////////////////////////////////////////
 
 // Function to send location data to a server
 async function getLocation() {
-    fetch('/api/location/', {
-        method: 'GET',
-    })
-        .then(response => {
-            console.log("Get Request");
-            console.log(response.json());
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log(response);
-            return response;
-        })
-        .then(data => {
-            console.log('Data received:', data);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-}
+    try {
+        const response = await fetch('/api/location/', { method: 'GET' });
+        console.log("GET REQUEST");
 
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json(); // Wait for the JSON parsing to complete
+        console.log('Data received:', data);
+        return data; // Return the parsed data
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
 // Function to send location data to a server
 async function postLocation(location) {
     fetch('/api/location/', {
@@ -201,7 +202,7 @@ async function postLocation(location) {
         body: JSON.stringify(createLocationData(location)), // Send the location object directly
     })
         .then(response => {
-            console.log("Post Request");
+            console.log("POST REQUEST");
             console.log(response.json());
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -217,29 +218,31 @@ async function postLocation(location) {
             console.log(JSON.stringify(createLocationData(location)));
             console.error('Error fetching data:', error);
         });
-
 }
 
 // Function to send location data to a server
-async function putLocation(locationId, locationData) {
+async function putLocation(locationId, location) {
     fetch('/api/location/' + locationId, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(locationData)
+        headers: {'Content-Type': 'application/json',},
+        body: JSON.stringify(createLocationData(location)),
     })
         .then(response => {
+            console.log("PUT REQUEST");
+            console.log(response.json());
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
+            console.log(response);
+            return response;
         })
         .then(data => {
-            console.log('Location updated successfully:', data);
+            console.log('Data received:', data);
         })
         .catch(error => {
-            console.error('Error updating location:', error);
+            console.log("Post Response:");
+            console.log(JSON.stringify(createLocationData(location)));
+            console.error('Error fetching data:', error);
         });
 }
 
@@ -252,14 +255,8 @@ async function deleteLocation(locationId) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Location deleted successfully:', data);
-        })
-        .catch(error => {
-            console.error('Error deleting location:', error);
         });
+
 }
 
 //Format  Location data
@@ -275,4 +272,35 @@ function createLocationData(location) {
         country: location.address.country,
         country_code: location.address.country_code
     };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+//           CLIENT -> SERVER FORECAST FUNCTIONALITY                                //
+//////////////////////////////////////////////////////////////////////////////////////
+
+async function postForecast(forecast) {
+    fetch('/api/forecast/', {
+        method: "POST",
+        headers: { 'Content-Type': "application/json" },
+        fetchWeatherForecast,
+        body: JSON.stringify(forecast), // Send the location object directly
+
+    })
+        .then(response => {
+            console.log("Post Request");
+            console.log(response.json());
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log(response);
+            return response;
+        })
+        .then(data => {
+            console.log('Data received:', data);
+        })
+        .catch(error => {
+            console.log("Post Response:");
+            console.log(JSON.stringify(forecast));
+            console.error('Error fetching data:', error);
+        });
 }

@@ -24,5 +24,8 @@ namespace Weekly_Weather.Models
         public string state { get; set; }  
         public string country { get; set; }
         public string country_code { get; set; }
-        }
+
+        //Forecast Parameters
+        public ICollection<Forecast>? Forecasts { get; set; }
+    }
     }
