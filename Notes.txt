@@ -1,0 +1,7 @@
+To Do:
+
+-Update view when new city is added.
+
+- Configure Put & Delete in site.js & Location Controller
+
+- Make App Look good

@@ -1,0 +1,116 @@
+﻿@* Razor syntax for setting the page title *@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*Initiate Model *@
+@model IEnumerable<Weekly_Weather.Models.Location>;
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Stylesheet for jQuery UI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+
+    <!-- jQuery Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- jQuery UI Library -->
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+    <!-- Autocomplete Custom Script -->
+    <script defer src="js/autocomplete.js"></script>
+
+    <!-- Inline CSS (Consider moving this to a separate CSS file for better organization) -->
+    <style>
+        body {
+        background-color: #63b5f1;
+        }
+
+        .forecast-display {
+        border: 1px solid #ccc;
+        margin: 10px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="~/css/weather-icons.css">
+
+</head>
+
+<body>
+
+    <!-- Page Header -->
+    <div class="text-center">
+        <h1 class="display-4">Welcome to Chris's Weather Application</h1>
+    </div>
+
+    <!-- Search Bar with Autocomplete -->
+    <div class="search-bar">
+        <input type="text" id="addressSearch" placeholder="Enter a City">
+        <button onclick="geocodeAddress()">Add</button>
+    </div>
+
+    @*
+    Map Display 
+    <div id="map" class="map" style="width: 100%; height: 500px;"></div>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.5.0/build/ol.js"></script>
+    <script>
+    // JavaScript code for initializing the map
+    </script>
+    *@
+
+    @{
+        //Mapping Dictionary for weathercode Icons
+        var weatherCodeToIconMap = new Dictionary<int, string>
+        {
+            { 0, "thermometer" }, { 1, "cloudy" }, { 2, "thermometer" }, { 3, "cloudy" }, { 4, "fog" }, { 5, "fog" }, { 6, "dust" }, { 7, "dust" }, { 8, "dust" }, { 9, "dust" },
+            { 10, "fog" }, { 11, "fog" }, { 12, "lightning" }, { 13, "cloudy" },{ 14, "cloudy" }, { 15, "cloudy" }, { 16, "cloudy" }, { 17, "cloudy" }, { 18, "strong-wind" }, { 19, "tornado" },
+            { 20, "fog" }, { 21, "rain-mix" }, { 22, "rain-mix" }, { 23, "rain" }, { 24, "snow" }, { 25, "hail" }, { 26, "thunderstorm" }, { 27, "dust" }, { 28, "dust" }, { 29, "dust" },
+            { 30, "fog" }, { 31, "fog" }, { 32, "fog" }, { 33, "fog" }, { 34, "fog" }, { 35, "fog" }, { 36, "snow" }, { 37, "snow" }, { 38, "snow" }, { 39, "snow" },
+            { 40, "rain-mix" }, { 41, "sprinkle" }, { 42, "rain" }, { 43, "sprinkle" }, { 44, "rain" }, { 45, "hail" }, { 46, "hail" }, { 47, "snow" }, { 48, "snow" }, { 49, "snow" },
+            { 50, "sprinkle" }, { 51, "sprinkle" }, { 52, "rain" }, { 53, "rain" }, { 54, "snowflake-cold" }, { 55, "snowflake-cold" }, { 56, "snowflake-cold" }, { 57, "sprinkle" }, { 58, "rain" }, { 59, "rain" },
+            { 60, "sprinkle" }, { 61, "sprinkle" }, { 62, "rain" }, { 63, "rain" }, { 64, "hail" }, { 65, "hail" }, { 66, "hail" }, { 67, "rain-mix" }, { 68, "rain-mix" }, { 69, "rain-mix" },
+            { 70, "snow" }, { 71, "snow" }, { 72, "snow" }, { 73, "snow" }, { 74, "snowflake-cold" }, { 75, "snowflake-cold" }, { 76, "snowflake-cold" }, { 77, "snow" }, { 78, "snowflake-cold" }, { 79, "snowflake-cold" },
+            { 80, "rain" }, { 81, "sprinkle" }, { 82, "rain" }, { 83, "rain" }, { 84, "storm-showers" }, { 85, "rain-mix" }, { 86, "rain-mix" }, { 87, "rain-mix" }, { 88, "rain-mix" }, { 89, "hail" },
+            { 90, "lightning" }, { 91, "storm-showers" }, { 92, "thunderstorm" }, { 93, "thunderstorm" }, { 94, "lightning" }, { 95, "thunderstorm" }, { 96, "thunderstorm" }, { 97, "thunderstorm" }, { 98, "thunderstorm" }, { 99, "tornado" }
+        };
+
+        public string GetIconClassForWeatherCode(int code)
+        {
+            if (weatherCodeToIconMap.TryGetValue(code, out string iconClass))
+            {
+                return iconClass;
+            }
+
+            return "default-icon"; // Default icon class if code not found
+        }
+        
+
+    } 
+    <i class="wi wi-day-sunny"></i>
+
+
+
+  
+    <!-- Weather Forecast Custom Script -->
+    @foreach (var location in Model)
+    {
+        <div class="forecast-display" data-city="@location.city" data-lat="@location.lat" data-lon="@location.lon">
+            <h2>@location.city</h2>
+            <!-- Placeholder for forecast data -->
+            <div class="forecast-data">
+                <!-- Forecast data will be populated here -->
+            </div>
+        </div>
+        
+    }
+</body>
+</html>
