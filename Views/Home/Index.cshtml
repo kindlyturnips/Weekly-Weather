@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
 @*Initiate Model *@
 @model IEnumerable<Weekly_Weather.Models.Location>;
 
@@ -12,38 +11,21 @@
 <head>
     <meta charset="UTF-8">
     <title>@ViewData["Title"]</title>
-
     <!--jQuery UI -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script defer src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
     <!-- Autocomplete Custom Script -->
     <script defer src="js/autocomplete.js"></script>
-
-    <!-- Inline CSS  
-    <style>
-        body {
-        background-color: #63b5f1;
-        }
-
-        .forecast-display {
-        border: 1px solid #ccc;
-        margin: 10px;
-        }
-    </style>-->
-
     <link rel="stylesheet" href="~/css/weather-icons.css">
 
 </head>
 
 <body>
-
     <!-- Page Header -->
     <div class="text-center">
         <h1 class="display-4">Welcome to Chris's Weather Application</h1>
     </div>
-
     <!-- Search Bar with Autocomplete -->
     <div class="search-bar">
         <input type="text" id="addressSearch" placeholder="Enter a City">
@@ -85,24 +67,34 @@
 
         return "default-icon"; // Default icon class if code not found
         }*/
-        
+
 
     } 
     <i class="wi wi-day-sunny"></i>
 
 
-
-  
     <!-- Weather Forecast Custom Script -->
     @foreach (var location in Model)
     {
+        var forecast = location.forecast[0];
         <div class="forecast-display" data-city="@location.city" data-lat="@location.lat" data-lon="@location.lon">
-            <h2>@location.city</h2>
-            <!-- Placeholder for forecast data -->
-            <div class="forecast-data">
-                <!-- Forecast data will be populated here -->
-            </div>
+            <h2 class="forecast-city"> @location.city</h2>
+            <a href="#" class="close"></a>
         </div>
+            <div class="forecast-data">
+                @for(int i = 0; i < 7; i++)
+                {
+                <div class="forecast-day">
+                    <p>@forecast.date_array[i].Substring(5,5)</p>
+                    <p>High </p>
+                    <p>@forecast.temperature_2m_max_array[i] @forecast.temperature_2m_units</p>
+                    <p>Low </p>
+                    <p>@forecast.temperature_2m_min_array[i] @forecast.temperature_2m_units</p>
+                    <p>WC</p>
+                </div>
+                }
+            </div>
+        <br />
         
     }
 </body>

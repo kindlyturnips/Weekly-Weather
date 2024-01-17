@@ -25,37 +25,95 @@ namespace Weekly_Weather.Controllers
             _logger = logger;
 
         }
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        // Get all Forecasts for the Location
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
+            //Check
             System.Diagnostics.Debug.AutoFlush = true;
-            System.Diagnostics.Debug.WriteLine("Fucking Get");
-
-            //var user = await _userManager.GetUserAsync(User);
-            var userId = _userManager.GetUserId(User);
-            var locations = await _context.Location
-                                          .Where(l => l.UserId == userId)
-                                          .ToListAsync();
-            return Ok(locations);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Location location)
-        {
-            System.Diagnostics.Debug.AutoFlush = true;
-            System.Diagnostics.Debug.WriteLine("Fucking Post");
+            System.Diagnostics.Debug.WriteLine("Get Forecast");
 
             //Add UserID
-            var userId = _userManager.GetUserId(User); // Get the current user's ID
-            location.UserId = userId; // Set the UserModelId to associate the location with the current user
-
-            _context.Location.Add(location);
-            await _context.SaveChangesAsync();
-
-
-            return CreatedAtAction("GetLocation", new { id = location.LocationId }, location);
+            var userId = _userManager.GetUserId(User);
+            var forecasts = await _context.Forecast
+                                          .Where(f => f.LocationId == id)
+                                          .ToListAsync();
+            return Ok(forecasts);
         }
+
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Post(int id, Forecast forecast)
+        {
+            //Check
+            System.Diagnostics.Debug.AutoFlush = true;
+            System.Diagnostics.Debug.WriteLine("Post Forecast");
+
+            //Add UserID
+            forecast.LocationId = id;
+
+            //Add Forecast
+            
+            _context.Forecast.Add(forecast);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("Post Forecast", new { id = forecast.ForecastId }, forecast);
+
+        }
+        // Update an existing location
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Forecast forecast)
+        {
+            //Check
+            System.Diagnostics.Debug.AutoFlush = true;
+            System.Diagnostics.Debug.WriteLine("Put Forecast");
+
+            
+            //Add UserID
+            forecast.LocationId = id;
+            //Find Location
+            var existing_forecast = await _context.Forecast
+                                           .FirstOrDefaultAsync(f => f.LocationId == id);
+
+            if (existing_forecast == null)
+            {
+                return NotFound();
+            }
+            //Update
+            existing_forecast.date_array = forecast.date_array;
+            existing_forecast.temperature_2m_max_array = forecast.temperature_2m_max_array;
+            existing_forecast.temperature_2m_min_array = forecast.temperature_2m_min_array;
+            existing_forecast.sunrise_array = forecast.sunrise_array;
+            existing_forecast.sunset_array = forecast.sunset_array;
+            existing_forecast.precipitation_sum_array = forecast.precipitation_sum_array;
+            existing_forecast.precipitation_probability_max_array = forecast.precipitation_probability_max_array;
+            existing_forecast.precipitation_sum_units = forecast.precipitation_sum_units;
+            existing_forecast.temperature_2m_units = forecast.temperature_2m_units;
+            await _context.SaveChangesAsync();
+            
+            return NoContent();
+        }
+
+        // Delete an existing location
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            //Check
+            System.Diagnostics.Debug.AutoFlush = true;
+            System.Diagnostics.Debug.WriteLine("Delete Forecast");
+
+
+            //Find Location
+            var existing_forecast = await _context.Forecast
+                                          .Where(l => l.LocationId == id)
+                                          .FirstOrDefaultAsync();
+
+            //Remove
+            _context.Forecast.Remove(existing_forecast); // Remove the location from the context
+            await _context.SaveChangesAsync(); // Save the changes to the database
+
+            return NoContent();
+        }
+
 
     }
 }

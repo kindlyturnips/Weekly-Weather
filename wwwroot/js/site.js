@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchWeatherForecast(latitude, longitude)
             .then(data => {
                 // Handle the fetched data for each location
-                displayForecast(data, element.querySelector('.forecast-data'));
+                //displayForecast(data, element.querySelector('.forecast-data'));
+                console.log(data);
             })
             .catch(error => {
                 // Handle any errors
@@ -62,12 +63,7 @@ function geocodeAddress() {
                     // Convert the coordinates for map projection
                     var coord = ol.proj.fromLonLat([parseFloat(result.lon), parseFloat(result.lat)]);
 
-                    // Fetch and process the weather forecast for the geocoded location
-                    fetchWeatherForecast(result.lat, result.lon)
-                        .then(weatherData => {
-                            // Handle the weather data here
-                            console.log(weatherData);
-                        });
+
                 } else {
                     // Alert if no results were found for the address
                     alert("Address not found!");
@@ -83,10 +79,25 @@ function geocodeAddress() {
 
  
 async function Test() {
-    console.log("TEST");
-    const get_locations = await getLocation();
-    console.log("Test Data 1:", get_locations);
-    deleteLocation(get_locations[0].locationId)
+    const locations = await getLocation();
+    console.log("Test Locations:", locations);
+
+    for (var location of locations) {
+        console.log(location.city);
+        const forecast = await fetchWeatherForecast(location.lat, location.lon);
+        console.log("Test Forecast:", forecast);
+        const forecast_json = createForecastData(forecast);
+        console.log("Test Forecast JSON 1:", forecast_json);
+        postForecast(location.locationId, forecast);
+
+    }
+    
+
+
+
+
+    //const get_forecast1 = await getForecast(get_locations[0].locationId);
+    //console.log("Test Get Forecast:", get_forecast1)
     
 
 }
@@ -116,7 +127,7 @@ async function fetchWeatherForecast(latitude, longitude) {
     const parameters = new URLSearchParams({
         latitude: latitude,
         longitude: longitude,
-        daily: ['temperature_2m_max', 'temperature_2m_min', 'weathercode'],
+        daily: ['temperature_2m_max', 'temperature_2m_min', 'weathercode', 'sunrise', 'sunset', 'precipitation_sum','precipitation_probability_max'],
         timezone: 'auto'
     });
 
@@ -138,7 +149,6 @@ function displayForecast(forecastData, element) {
     // Clear existing content
     element.innerHTML = '';
 
-    console.log(forecastData.daily);
     // Assuming the forecast data has a 'daily' property
     let dailyForecast = forecastData.daily;
     let time = dailyForecast.time;
@@ -166,10 +176,6 @@ function displayForecast(forecastData, element) {
         element.appendChild(forecastElement);
     }
 }
-
-    // Populate the forecast data into the element
-    // Example: element.innerHTML = 'Day 1: ' + forecastData.day1;
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -277,17 +283,31 @@ function createLocationData(location) {
 //////////////////////////////////////////////////////////////////////////////////////
 //           CLIENT -> SERVER FORECAST FUNCTIONALITY                                //
 //////////////////////////////////////////////////////////////////////////////////////
+async function getForecast(locationId) {
+    try {
+        const response = await fetch('/api/forecast/' + locationId, { method: 'GET' });
+        console.log("GET REQUEST");
 
-async function postForecast(forecast) {
-    fetch('/api/forecast/', {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json(); // Wait for the JSON parsing to complete
+        console.log('Data received:', data);
+        return data; // Return the parsed data
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+async function postForecast(locationId,forecast) {
+    fetch('/api/forecast/' + locationId, {
         method: "POST",
         headers: { 'Content-Type': "application/json" },
-        fetchWeatherForecast,
-        body: JSON.stringify(forecast), // Send the location object directly
-
+        body: JSON.stringify(createForecastData(forecast)), // Send the location object directly
     })
         .then(response => {
-            console.log("Post Request");
+            console.log("POST REQUEST");
             console.log(response.json());
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -300,7 +320,71 @@ async function postForecast(forecast) {
         })
         .catch(error => {
             console.log("Post Response:");
-            console.log(JSON.stringify(forecast));
+            console.log(JSON.stringify(createForecastData(forecast)));
             console.error('Error fetching data:', error);
         });
+}
+
+// Function to send location data to a server
+async function putForecast(locationId, forecast) {
+    fetch('/api/forecast/' + locationId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(createForecastData(forecast)),
+    })
+        .then(response => {
+            console.log("PUT REQUEST");
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log(response);
+            return response;
+        })
+        .then(data => {
+            console.log('Data received:', data);
+        })
+        .catch(error => {
+            console.log("Put Response:");
+            console.log(JSON.stringify(createForecastData(forecast)));
+            console.error('Error fetching data:', error);
+        });
+}
+
+// Function to send location data to a server
+async function deleteForecast(locationId) {
+    fetch('/api/forecast/' + locationId, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        });
+
+}
+
+//Format  Forecast data
+function createForecastData(forecast) {
+    const now = new Date(Date.now());
+
+    // Extract year, month, and day
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = now.getDate().toString().padStart(2, '0');
+
+    // Format as 'YYYY-MM-DD'
+    const formattedDate = `${year}-${month}-${day}`;
+
+    return {
+        creation_date: formattedDate,
+        date_array: forecast.daily.time,
+        temperature_2m_max_array: forecast.daily.temperature_2m_max,
+        temperature_2m_min_array: forecast.daily.temperature_2m_min,
+        sunrise_array: forecast.daily.sunrise,
+        sunset_array: forecast.daily.sunset,
+        precipitation_sum_array: forecast.daily.precipitation_sum,
+        precipitation_probability_max_array: forecast.daily.precipitation_probability_max,
+        precipitation_sum_units: forecast.daily_units.precipitation_sum,
+        temperature_2m_units: forecast.daily_units.temperature_2m_max,
+    };
 }

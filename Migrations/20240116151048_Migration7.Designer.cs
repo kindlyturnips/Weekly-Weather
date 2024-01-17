@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Weekly_Weather.Models;
 
@@ -11,9 +12,11 @@ using Weekly_Weather.Models;
 namespace Weekly_Weather.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240116151048_Migration7")]
+    partial class Migration7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,34 +169,32 @@ namespace Weekly_Weather.Migrations
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("creation_date")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("date")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("precipitation_probability_max")
+                        .HasColumnType("real");
 
-                    b.Property<string>("precipitation_probability_max")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("precipitation_sum")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("precipitation_sum")
+                        .HasColumnType("real");
 
                     b.Property<string>("precipitation_sum_units")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sunrise")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("sunset")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("temperature_2m_max")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("temperature_2m_max")
+                        .HasColumnType("real");
 
-                    b.Property<string>("temperature_2m_min")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("temperature_2m_min")
+                        .HasColumnType("real");
 
                     b.Property<string>("temperature_2m_units")
                         .IsRequired()

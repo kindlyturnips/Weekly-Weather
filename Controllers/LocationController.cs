@@ -51,7 +51,7 @@ namespace Weekly_Weather.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Location location)
+        public async Task<IActionResult> Post( Location location)
         {
             //Check
             System.Diagnostics.Debug.AutoFlush = true;
@@ -64,7 +64,7 @@ namespace Weekly_Weather.Controllers
             //Add Location
             _context.Location.Add(location);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetLocation", new { id = location.LocationId }, location);
+            return CreatedAtAction("Post Location", new { id = location.LocationId }, location);
         }
 
 
@@ -106,7 +106,7 @@ namespace Weekly_Weather.Controllers
         {
             //Check
             System.Diagnostics.Debug.AutoFlush = true;
-            System.Diagnostics.Debug.WriteLine("Put Location");
+            System.Diagnostics.Debug.WriteLine("Delete Location");
 
 
             //Add UserID

@@ -58,7 +58,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity Services - Use either AddDefaultIdentity or AddIdentity, but not both
-//Use fucking AddIdentiyCore, not fucking AddIdenty, not fucking AddDefaultIdentity
+//Use AddIdentiyCore, not AddIdenty, not AddDefaultIdentity
 builder.Services
    .AddIdentityCore<User>()//(options => options.SignIn.RequireConfirmedAccount = true)
    .AddEntityFrameworkStores<ApplicationDbContext>();

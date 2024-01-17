@@ -25,15 +25,19 @@ namespace Weekly_Weather.Controllers
 
         public IActionResult Index()
         {
-            //Add logic to get data from database
+
             var userId = _userManager.GetUserId(User);
-
-            //List<Location> locations = new List<Location>();
-            System.Diagnostics.Debug.AutoFlush = true;
-            System.Diagnostics.Debug.WriteLine("Fucking Locations");
-
             var locations =  GetLocations().Result;
- 
+            System.Diagnostics.Debug.AutoFlush = true;
+            System.Diagnostics.Debug.WriteLine("Home Controller");
+
+            foreach(var location in locations)
+            {
+                System.Diagnostics.Debug.WriteLine(location.city);
+                System.Diagnostics.Debug.WriteLine(location);
+                System.Diagnostics.Debug.WriteLine(location.forecast[0].sunrise_array);
+            }
+
 
             return View(locations);
         }
@@ -45,7 +49,13 @@ namespace Weekly_Weather.Controllers
             var locations = await _context.Location
                                           .Where(l => l.UserId == userId)
                                           .ToListAsync();
-            return locations;
+            foreach (var location in locations)
+            {
+                location.forecast = await _context.Forecast
+                                          .Where(l => l.LocationId == location.LocationId)
+                                          .ToListAsync();
+            }
+                return locations;
         }
 
 

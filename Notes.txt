@@ -17,10 +17,10 @@ CLIENT
 			-Put Forecast If Older
 
 		Forecast
-			-Get
-			-Post
-			-Put.  Check Creation Date vs. Current Time.  Used in Login
-			-Delete.  Used in Delete Location
+			✓-Get
+			✓-Post
+			✓-Put.  Check Creation Date vs. Current Time.  Used in Login
+			✓-Delete.  Used in Delete Location
 
 		✓Location
 			✓-Get
@@ -33,18 +33,19 @@ CLIENT
 SERVER
 	MODEL
 		Forecast
-			-Add Creation Date of Forecast Parameter
-			-New Migration
+			✓-Add Creation Date of Forecast Parameter
+			✓-New Migration
+			-Add Weather Code
 
 CONTROLLER
 	Location
 		✓-Configure Put 
 		✓-Configure Delete
 	Forecast
-		-Configure Get
-		-Configure Post
-		-Configure Put
-		-Configure Delete
+		✓-Configure Get
+		✓-Configure Post
+		✓-Configure Put
+		✓-Configure Delete
 
 VIEW
 	Buttons
@@ -53,6 +54,7 @@ VIEW
 
 	Asthetics 
 		-Make App Look good
+		-WeatherCode displays Appropriate Icon
 	
 	Refresh Functionality
 		-Update View functionality
