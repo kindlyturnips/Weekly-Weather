@@ -35,7 +35,7 @@ namespace Weekly_Weather.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(location.city);
                 System.Diagnostics.Debug.WriteLine(location);
-                System.Diagnostics.Debug.WriteLine(location.forecast[0].sunrise_array);
+                //System.Diagnostics.Debug.WriteLine(location.forecast[0].sunrise_array);
             }
 
 

@@ -89,6 +89,7 @@ async function Test() {
         const forecast_json = createForecastData(forecast);
         console.log("Test Forecast JSON 1:", forecast_json);
         postForecast(location.locationId, forecast);
+        //deleteForecast(location.locationId);
 
     }
     
@@ -386,5 +387,6 @@ function createForecastData(forecast) {
         precipitation_probability_max_array: forecast.daily.precipitation_probability_max,
         precipitation_sum_units: forecast.daily_units.precipitation_sum,
         temperature_2m_units: forecast.daily_units.temperature_2m_max,
+        weather_code_array:forecast.daily.weathercode,
     };
 }

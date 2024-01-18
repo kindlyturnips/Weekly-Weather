@@ -10,6 +10,10 @@ CLIENT
 		-Delete Location: Delete Location & Delete Forecasts
 
 	Functionality
+		Fetching Weather Forecast
+			-Migrate to Server?
+
+
 		On Login
 			-Get Locations
 			-Fetch Forecast from External API
@@ -35,8 +39,11 @@ SERVER
 		Forecast
 			✓-Add Creation Date of Forecast Parameter
 			✓-New Migration
-			-Add Weather Code
+			✓-Add Weather Code
 
+	FUNCTIONALITY
+			Fetching Weather Forecast
+				-Migrate to Server
 CONTROLLER
 	Location
 		✓-Configure Put 
@@ -51,12 +58,16 @@ VIEW
 	Buttons
 		-Delete Location
 		-Refresh Forecast
+		-Change Units 
 
 	Asthetics 
 		-Make App Look good
-		-WeatherCode displays Appropriate Icon
+		✓-WeatherCode displays Appropriate Icon
+		-Change spacings & Fonts to scale with page
 	
 	Refresh Functionality
 		-Update View functionality
+
+
 
 

@@ -42,38 +42,40 @@
     </script>
     *@
 
+    <!-- Weather Code Maps -->
     @{
         //Mapping Dictionary for weathercode Icons
         var weatherCodeToIconMap = new Dictionary<int, string>
         {
-            { 0, "thermometer" }, { 1, "cloudy" }, { 2, "thermometer" }, { 3, "cloudy" }, { 4, "fog" }, { 5, "fog" }, { 6, "dust" }, { 7, "dust" }, { 8, "dust" }, { 9, "dust" },
-            { 10, "fog" }, { 11, "fog" }, { 12, "lightning" }, { 13, "cloudy" },{ 14, "cloudy" }, { 15, "cloudy" }, { 16, "cloudy" }, { 17, "cloudy" }, { 18, "strong-wind" }, { 19, "tornado" },
-            { 20, "fog" }, { 21, "rain-mix" }, { 22, "rain-mix" }, { 23, "rain" }, { 24, "snow" }, { 25, "hail" }, { 26, "thunderstorm" }, { 27, "dust" }, { 28, "dust" }, { 29, "dust" },
-            { 30, "fog" }, { 31, "fog" }, { 32, "fog" }, { 33, "fog" }, { 34, "fog" }, { 35, "fog" }, { 36, "snow" }, { 37, "snow" }, { 38, "snow" }, { 39, "snow" },
-            { 40, "rain-mix" }, { 41, "sprinkle" }, { 42, "rain" }, { 43, "sprinkle" }, { 44, "rain" }, { 45, "hail" }, { 46, "hail" }, { 47, "snow" }, { 48, "snow" }, { 49, "snow" },
-            { 50, "sprinkle" }, { 51, "sprinkle" }, { 52, "rain" }, { 53, "rain" }, { 54, "snowflake-cold" }, { 55, "snowflake-cold" }, { 56, "snowflake-cold" }, { 57, "sprinkle" }, { 58, "rain" }, { 59, "rain" },
-            { 60, "sprinkle" }, { 61, "sprinkle" }, { 62, "rain" }, { 63, "rain" }, { 64, "hail" }, { 65, "hail" }, { 66, "hail" }, { 67, "rain-mix" }, { 68, "rain-mix" }, { 69, "rain-mix" },
-            { 70, "snow" }, { 71, "snow" }, { 72, "snow" }, { 73, "snow" }, { 74, "snowflake-cold" }, { 75, "snowflake-cold" }, { 76, "snowflake-cold" }, { 77, "snow" }, { 78, "snowflake-cold" }, { 79, "snowflake-cold" },
-            { 80, "rain" }, { 81, "sprinkle" }, { 82, "rain" }, { 83, "rain" }, { 84, "storm-showers" }, { 85, "rain-mix" }, { 86, "rain-mix" }, { 87, "rain-mix" }, { 88, "rain-mix" }, { 89, "hail" },
-            { 90, "lightning" }, { 91, "storm-showers" }, { 92, "thunderstorm" }, { 93, "thunderstorm" }, { 94, "lightning" }, { 95, "thunderstorm" }, { 96, "thunderstorm" }, { 97, "thunderstorm" }, { 98, "thunderstorm" }, { 99, "tornado" }
+    { 0, "wi-cloudy" }, { 1, "wi-cloudy" }, { 2, "wi-cloudy" }, { 3, "wi-cloudy" }, { 4, "wi-smog" }, { 5, "wi-fog" }, { 6, "wi-dust" }, { 7, "wi-sandstorm" }, { 8, "wi-sandstorm" }, { 9, "wi-sandstorm" },
+    { 10, "wi-fog" }, { 11, "wi-fog" }, { 12, "wi-fog" }, { 13, "wi-lightning" },{ 14, "wi-cloudy" }, { 15, "wi-cloudy" }, { 16, "wi-cloudy" }, { 17, "wi-thunderstorm" }, { 18, "wi-strong-wind" }, { 19, "wi-tornado" },
+    { 20, "wi-sprinkle" }, { 21, "wi-rain" }, { 22, "wi-snow" }, { 23, "wi-sleet" }, { 24, "wi-rain-mix" }, { 25, "wi-rain" }, { 26, "wi-rain-mix" }, { 27, "wi-hail" }, { 28, "wi-fog" }, { 29, "wi-thunderstorm" },
+    { 30, "wi-sandstorm" }, { 31, "wi-sandstorm" }, { 32, "wi-sandstorm" }, { 33, "wi-sandstorm" }, { 34, "wi-sandstorm" }, { 35, "wi-sandstorm" }, { 36, "wi-snow" }, { 37, "wi-snow" }, { 38, "wi-snow" }, { 39, "wi-snow" },
+    { 40, "wi-fog" }, { 41, "wi-fog" }, { 42, "wi-fog" }, { 43, "wi-fog" }, { 44, "wi-fog" }, { 45, "wi-fog" }, { 46, "wi-fog" }, { 47, "wi-fog" }, { 48, "wi-fog" }, { 49, "wi-fog" },
+    { 50, "wi-sprinkle" }, { 51, "wi-sprinkle" }, { 52, "wi-sprinkle" }, { 53, "wi-sprinkle" }, { 54, "wi-sprinkle" }, { 55, "wi-sprinkle" }, { 56, "wi-sleet" }, { 57, "wi-sleet" }, { 58, "wi-sprinkle" }, { 59, "wi-sprinkle" },
+    { 60, "wi-rain" }, { 61, "wi-rain" }, { 62, "wi-rain" }, { 63, "wi-rain" }, { 64, "wi-rain" }, { 65, "wi-rain" }, { 66, "wi-sleet" }, { 67, "wi-sleet" }, { 68, "wi-rain-mix" }, { 69, "wi-rain-mix" },
+    { 70, "wi-snow" }, { 71, "wi-snow" }, { 72, "wi-snow" }, { 73, "wi-snow" }, { 74, "wi-snow" }, { 75, "wi-snow" }, { 76, "wi-snow" }, { 77, "wi-snow" }, { 78, "wi-snow" }, { 79, "wi-snow" },
+    { 80, "wi-rain" }, { 81, "wi-rain" }, { 82, "wi-rain" }, { 83, "wi-rain-mix" }, { 84, "wi-rain-mix" }, { 85, "wi-rain-mix" }, { 86, "wi-rain-mix" }, { 87, "wi-hail" }, { 88, "wi-hail" }, { 89, "wi-hail" },
+    { 90, "wi-hail" }, { 91, "wi-thunderstorm" }, { 92, "wi-rain" }, { 93, "wi-rain-mix" }, { 94, "wi-rain-mix" }, { 95, "wi-thunderstorm" }, { 96, "wi-thunderstorm" }, { 97, "wi-thunderstorm" }, { 98, "wi-thunderstorm" }, { 99, "wi-thunderstorm" }
         };
-        /*
-        public string GetIconClassForWeatherCode(int code)
+        //Mapping Dictionary for WMO Weather Code Description
+        var WMOCodetoDescriptionMap = new Dictionary<int, string>
         {
-        if (weatherCodeToIconMap.TryGetValue(code, out string iconClass))
-        {
-        return iconClass;
-        }
+    { 00, "Cloudy" }, { 01, "Cloudy" }, { 02, "Cloudy" }, { 03, "Cloudy" }, { 04, "Smoke/Smog" }, { 05, "Haze" }, { 06, "Duststorm" }, { 07, "Duststorm" }, { 08, "Duststorm" }, { 09, "Duststorm" },
+    { 10, "Mist" }, { 11, "Fog" }, { 12, "Fog" }, { 13, "Lightning" }, { 14, "Cloudy" }, { 15, "Cloudy" }, { 16, "Cloudy" }, { 17, "Thunderstorm" }, { 18, "Squalls" }, { 19, "Funnel Clouds" },
+    { 20, "Drizzle" }, { 21, "Rain" }, { 22, "Snow" }, { 23, "Rain/Snow" }, { 24, "Freezing Rain" }, { 25, "Showers" }, { 26, "Rain and Snow" }, { 27, "Hail" }, { 28, "Fog" }, { 29, "Thunderstorm" },
+    { 30, "Duststorm" }, { 31, "Duststorm" }, { 32, "Duststorm" }, { 33, "Duststorm" }, { 34, "Duststorm" }, { 35, "Duststorm" }, { 36, "Snow" }, { 37, "Snow" }, { 38, "Snow" }, { 39, "Snow" },
+    { 40, "Fog" }, { 41, "Fog" }, { 42, "Fog" }, { 43, "Fog" }, { 44, "Fog" }, { 45, "Fog" }, { 46, "Fog" }, { 47, "Fog" }, { 48, "Fog" }, { 49, "Fog" },
+    { 50, "Drizzle" }, { 51, "Drizzle" }, { 52, "Drizzle" }, { 53, "Drizzle" }, { 54, "Drizzle" }, { 55, "Drizzle" }, { 56, "Freezing Drizzle" }, { 57, "Freezing Drizzle" }, { 58, "Freezing Drizzle" }, { 59, "Rain" },
+    { 60, "Rain" }, { 61, "Rain" }, { 62, "Rain" }, { 63, "Rain" }, { 64, "Rain" }, { 65, "Rain" }, { 66, "Freezing Rain" }, { 67, "Freezing Rain" }, { 68, "Rain/Snow" }, { 69, "Rain/Snow" },
+    { 70, "Snow" }, { 71, "Snow" }, { 72, "Snow" }, { 73, "Snow" }, { 74, "Snow" }, { 75, "Snow" }, { 76, "Snow" }, { 77, "Snow" }, { 78, "Snow" }, { 79, "Snow" },
+    { 80, "Showers" }, { 81, "Showers" }, { 82, "Showers" }, { 83, "Showers" }, { 84, "Showers" }, { 85, "Rain/Snow" }, { 86, "Rain/Snow" }, { 87, "Rain/Snow" }, { 88, "Rain/Snow" }, { 89, "Hail" },
+    { 90, "Hail" }, { 91, "Thunderstorm" }, { 92, "Thunderstorm" }, { 93, "Mixed Precip" }, { 94, "Mixed Precip" }, { 95, "Thunderstorm" }, { 96, "Thunderstorm" }, { 97, "Thunderstorm" }, { 98, "Thunderstorm" }, { 99, "Thunderstorm" }
 
-        return "default-icon"; // Default icon class if code not found
-        }*/
-
-
+        };
     } 
-    <i class="wi wi-day-sunny"></i>
-
-
-    <!-- Weather Forecast Custom Script -->
+   
+    <!-- Display Weather Code -->
     @foreach (var location in Model)
     {
         var forecast = location.forecast[0];
@@ -84,18 +86,26 @@
             <div class="forecast-data">
                 @for(int i = 0; i < 7; i++)
                 {
+                    
                 <div class="forecast-day">
                     <p>@forecast.date_array[i].Substring(5,5)</p>
                     <p>High </p>
                     <p>@forecast.temperature_2m_max_array[i] @forecast.temperature_2m_units</p>
                     <p>Low </p>
                     <p>@forecast.temperature_2m_min_array[i] @forecast.temperature_2m_units</p>
-                    <p>WC</p>
+                        <p>@WMOCodetoDescriptionMap[@forecast.weather_code_array[i]]</p>
+                        <i class="wi @weatherCodeToIconMap[@forecast.weather_code_array[i]]"></i>
+
                 </div>
                 }
             </div>
         <br />
-        
+      
     }
+
+
+
+
+
 </body>
 </html>

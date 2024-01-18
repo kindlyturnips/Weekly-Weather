@@ -120,9 +120,26 @@ namespace Weekly_Weather.Models
                     precipitation_probability_max = String.Join(";", _data.Select(p => p.ToString()).ToArray());
                 }
             }
+        [JsonIgnore]
+        public string? weather_code { get; set; }
+            [NotMapped]
+            public int[] weather_code_array
+            {
+                get
+                {              
+                return Array.ConvertAll(weather_code.Split(';'), int.Parse);
+                }
+                set
+                {
+                    int[] _data = value;
+                    weather_code = String.Join(";", _data.Select(p => p.ToString()).ToArray());
+                }
+            }
+
 
         public string precipitation_sum_units { get; set; }
         public string temperature_2m_units { get; set; }
+      
         public string creation_date { get; set; }
 
     }

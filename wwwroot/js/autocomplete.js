@@ -14,33 +14,30 @@ $(document).ready(function () {
                 data: {
                     q: request.term,           // Search term entered by the user
                     countrycodes: 'us',       // Limit search to the United States
-                    addressdetails: 1         // Request detailed address information
+                    city: request.term 
                 },
                 success: function (data) {
-                    // Create an object to track unique labels (to avoid duplicates)
                     var uniqueLabels = {};
+                    var inputTerm = request.term.toLowerCase();
 
-                    // Map the response data to a format suitable for autocomplete suggestions
                     var results = $.map(data, function (item) {
-                        // Ensure the address is in the United States and contains necessary details
+                        // Check if the item is in the United States
                         if (item.address && item.address.country_code === 'us') {
-
-                            // Construct a label with the city/town name and state
+                            // Focus on city, town, or village
                             var label = item.address.city || item.address.town || item.address.village || '';
-                            if (item.address.state) {
-                                label += (label ? ', ' : '') + item.address.state;
-                            }
 
-                            // Exclude entries with empty or duplicate labels
-                            if (label && label !== item.address.state && !uniqueLabels[label]) {
-                                uniqueLabels[label] = true; // Mark this label as processed
+                            // Check if the label starts with the input term
+                            if (label.toLowerCase().startsWith(inputTerm) && !uniqueLabels[label]) {
+                                uniqueLabels[label] = true;
                                 return { label: label, value: label };
                             }
                         }
                     });
 
-                    // Pass the array of results to the response callback
+                    // Pass the filtered array of results to the response callback
                     response(results);
+                }
+
                 }
             });
         },
