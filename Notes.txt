@@ -15,7 +15,7 @@ CLIENT
 			-Check Forecast Creation Date vs. Current Time.  Used in Put Forecasts also
 			-Put Forecast If Older
 
-		Forecast
+		✓Forecast
 			✓-Get
 			✓-Post
 			✓-Put.  Check Creation Date vs. Current Time.  Used in Login
@@ -26,7 +26,7 @@ CLIENT
 			✓-Put			
 			✓-Delete
 
-		Search Bar
+		✓Search Bar
 			✓-Search by City
 
 SERVER
@@ -67,7 +67,7 @@ SERVER
 			✓-Configure Put
 			✓-Configure Delete
 
-	VIEW
+	+VIEW
 		Buttons
 			-Delete Location
 			-Refresh Forecast
