@@ -81,7 +81,9 @@
         var forecast = location.forecast[0];
         <div class="forecast-display" data-city="@location.city" data-lat="@location.lat" data-lon="@location.lon">
             <h2 class="forecast-city"> @location.city</h2>
-            <a href="#" class="close"></a>
+            <button class="close" type="button" onclick="deleteLocation(@location.LocationId)">✖</button>
+            <p>@location.LocationId </p>
+
         </div>
             <div class="forecast-data">
                 @for(int i = 0; i < 7; i++)

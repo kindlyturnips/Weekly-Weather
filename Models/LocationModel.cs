@@ -11,7 +11,10 @@ namespace Weekly_Weather.Models
         //Microsoft Identity
         [ForeignKey("ApplicationUser")]
         public string? UserId { get; set; }
-        //public User User { get; set; }
+        
+
+        //Parent Child Relationship
+        //public virtual Forecast? Forecast { get; set; }
 
 
         //Location Parameters
@@ -27,5 +30,6 @@ namespace Weekly_Weather.Models
 
         //Forecast Parameters
         public IList<Forecast>? forecast { get; set; }
+
     }
     }

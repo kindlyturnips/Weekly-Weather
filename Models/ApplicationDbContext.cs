@@ -22,7 +22,17 @@ namespace Weekly_Weather.Models
             // Define the primary key for the 'Locations' entity.
 
             modelBuilder.Entity<Location>().HasKey(l => l.LocationId);
+            /*modelBuilder.Entity<Location>()                
+                   .HasOne(f => f.Forecast)
+                   .WithOne(l => l.Location)
+                   .HasForeignKey<Forecast>(l => l.LocationId)
+                   .OnDelete(DeleteBehavior.Cascade);*/
+
+
+
             base.OnModelCreating(modelBuilder);
+
+
         }
 
     }

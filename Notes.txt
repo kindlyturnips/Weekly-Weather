@@ -3,9 +3,6 @@
 CLIENT
 	site.js
 	Buttons to Add
-		Forecast
-		-Refresh Forecast: Put Forecast
-
 		Location
 		-Delete Location: Delete Location & Delete Forecasts
 
@@ -13,11 +10,9 @@ CLIENT
 		Fetching Weather Forecast
 			-Migrate to Server?
 
-
 		On Login
 			-Get Locations
-			-Fetch Forecast from External API
-			-Get Forecast from Server, Check Creation Date vs. Current Time.  Used in Put Forecasts also
+			-Check Forecast Creation Date vs. Current Time.  Used in Put Forecasts also
 			-Put Forecast If Older
 
 		Forecast
@@ -32,41 +27,59 @@ CLIENT
 			✓-Delete
 
 		Search Bar
-			-Search by City
+			✓-Search by City
 
 SERVER
-	MODEL
+	+MODEL
 		Forecast
 			✓-Add Creation Date of Forecast Parameter
 			✓-New Migration
 			✓-Add Weather Code
 
-	FUNCTIONALITY
+		Parent Child Relationship?
+		-When setting up cascade delete & Upon Migration, Recieve the following warning.
+
+		The foreign key property 'Forecast.LocationId1' was created in shadow state because a conflicting property with the simple name 
+		'LocationId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible 
+		with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+		
+		Works well, but would like to address this issue
+		
+		-Also creating the Cascade Delete Migration breaks API
+		public virtual Forecast? Forecast { get; set; }
+		public virtual Location? Location { get; set; }
+
+		May need to update API Functionality
+
+
+	+FUNCTIONALITY
 			Fetching Weather Forecast
-				-Migrate to Server
-CONTROLLER
-	Location
-		✓-Configure Put 
-		✓-Configure Delete
-	Forecast
-		✓-Configure Get
-		✓-Configure Post
-		✓-Configure Put
-		✓-Configure Delete
+				-Migrate to Server?
+	+CONTROLLER
+		Location
+			✓-Configure Put
+			-Configure Put on dependent records (Forecast)
+			✓-Configure Delete
+			-Configure Put on dependent records (Forecast)
+		Forecast
+			✓-Configure Get
+			✓-Configure Post
+			✓-Configure Put
+			✓-Configure Delete
 
-VIEW
-	Buttons
-		-Delete Location
-		-Refresh Forecast
-		-Change Units 
+	VIEW
+		Buttons
+			-Delete Location
+			-Refresh Forecast
+			-Change Units 
 
-	Asthetics 
-		-Make App Look good
-		✓-WeatherCode displays Appropriate Icon
-		-Change spacings & Fonts to scale with page
+		Asthetics 
+			-Make App Look good
+			✓-WeatherCode displays Appropriate Icon
+			-Change spacings & Fonts to scale with page
 	
-	Refresh Functionality
-		-Update View functionality
+		Refresh Functionality
+			-Update View functionality
 
 
 

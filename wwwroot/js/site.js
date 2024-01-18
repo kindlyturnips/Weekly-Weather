@@ -266,6 +266,7 @@ async function deleteLocation(locationId) {
 
 }
 
+
 //Format  Location data
 function createLocationData(location) {
     return {
@@ -280,6 +281,7 @@ function createLocationData(location) {
         country_code: location.address.country_code
     };
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 //           CLIENT -> SERVER FORECAST FUNCTIONALITY                                //
@@ -361,7 +363,6 @@ async function deleteForecast(locationId) {
                 throw new Error('Network response was not ok');
             }
         });
-
 }
 
 //Format  Forecast data

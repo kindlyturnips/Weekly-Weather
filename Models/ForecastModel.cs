@@ -12,6 +12,11 @@ namespace Weekly_Weather.Models
         [ForeignKey("Location")]
         public int? LocationId { get; set; }
 
+
+        //Parent Child Relationship
+        //public virtual Location? Location { get; set; }
+
+
         //Forecast Parameters
         //https://stackoverflow.com/questions/15220921/how-to-store-double-array-to-database-with-entity-framework-code-first-approac
         [JsonIgnore]
@@ -136,11 +141,10 @@ namespace Weekly_Weather.Models
                 }
             }
 
-
         public string precipitation_sum_units { get; set; }
         public string temperature_2m_units { get; set; }
-      
         public string creation_date { get; set; }
 
+  
     }
 }

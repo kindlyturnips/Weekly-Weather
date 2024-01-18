@@ -1,3 +1,4 @@
+
 // This script sets up an autocomplete functionality for an address search input field
 // using the Nominatim geocoding service.
 
@@ -12,32 +13,36 @@ $(document).ready(function () {
                 url: "https://nominatim.openstreetmap.org/search?format=json",
                 dataType: "json", // Expecting JSON data in response
                 data: {
-                    q: request.term,           // Search term entered by the user
+                    addressdetails:1,
+                    city: request.term,           // Search term entered by the user
                     countrycodes: 'us',       // Limit search to the United States
-                    city: request.term 
                 },
                 success: function (data) {
+                    // Create an object to track unique labels (to avoid duplicates)
                     var uniqueLabels = {};
-                    var inputTerm = request.term.toLowerCase();
 
+                    // Map the response data to a format suitable for autocomplete suggestions
                     var results = $.map(data, function (item) {
-                        // Check if the item is in the United States
+                        // Ensure the address is in the United States and contains necessary details
                         if (item.address && item.address.country_code === 'us') {
-                            // Focus on city, town, or village
-                            var label = item.address.city || item.address.town || item.address.village || '';
 
-                            // Check if the label starts with the input term
-                            if (label.toLowerCase().startsWith(inputTerm) && !uniqueLabels[label]) {
-                                uniqueLabels[label] = true;
+                            // Construct a label with the city/town name and state
+                            var label = item.address.city || item.address.town || item.address.village || '';
+                            if (item.address.state) {
+                                label += (label ? ', ' : '') + item.address.state;
+                            }
+
+                            // Exclude entries with empty or duplicate labels
+                            if (label && label !== item.address.state && !uniqueLabels[label]) {
+                                uniqueLabels[label] = true; // Mark this label as processed
                                 return { label: label, value: label };
                             }
                         }
                     });
+                    console.log("Raw: ",  data);
 
-                    // Pass the filtered array of results to the response callback
+                    // Pass the array of results to the response callback
                     response(results);
-                }
-
                 }
             });
         },
