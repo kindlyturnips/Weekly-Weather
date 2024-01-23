@@ -1,10 +1,30 @@
-﻿// This script provides functionalities for geocoding addresses, retrieving weather forecasts, 
+﻿// This script provides functionalities for geocoding addresses, retrieving weather forecasts,
 // and handling location data in a web application.
 
 // Global array to store multiple locations
-var locations = [];
 
 //Update Location
+
+
+//Update Forecasts on Login
+getLocation().then(locations => {
+    console.log("Locations: ", locations);   
+    var today = todayFormated();
+    for (var i in locations) {
+        getForecast(locations[i].locationId).then(forecast => {           
+            if (forecast[0].creation_date != today) {
+                fetchWeatherForecast(locations[i].lat, locations[i].lon).then(new_forecast => {
+                    console.log("Updating Forecast");
+                    putForecast(locations[i].locationId, new_forecast);
+                });             
+            }    
+        });
+    }
+});
+
+
+
+/*
 document.addEventListener("DOMContentLoaded", function () {
     var forecastElements = document.querySelectorAll('.forecast-display');
 
@@ -24,7 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error(error);
             });
     });
-});
+});*/
+
+
+
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +77,9 @@ function geocodeAddress() {
                     // Retrieve and process the location details
                     var location = fetchLocation(result.lat, result.lon).then(location => {
                         //Server API Requests
-                        postLocation(location); // Send location details to the server
-                        getLocation();
+                        postLocation(location)
+
+                        //getLocation();
                     })
                     .catch(error => {
                         console.error('Error fetching location:', error);
@@ -76,7 +103,6 @@ function geocodeAddress() {
             });
     }
 }
-
  
 async function Test() {
     const locations = await getLocation();
@@ -89,7 +115,7 @@ async function Test() {
         const forecast_json = createForecastData(forecast);
         console.log("Test Forecast JSON 1:", forecast_json);
         postForecast(location.locationId, forecast);
-        //deleteForecast(location.locationId);
+        //deleteLocation(3);
 
     }
     
@@ -210,15 +236,21 @@ async function postLocation(location) {
     })
         .then(response => {
             console.log("POST REQUEST");
-            console.log(response.json());
+            console.log("Post Json: ", )
+            console.log(createLocationData(location));
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            console.log(response);
-            return response;
+            const locationUrl = response.headers.get('Location');
+            //console.log('Location header:', response.headers.get('Location'));
+            return { response: response, locationUrl: locationUrl };
         })
-        .then(data => {
-            console.log('Data received:', data);
+        .then(({ response, locationUrl }) => {
+            const locationId = locationUrl.split('/').pop();
+            fetchWeatherForecast(location.lat, location.lon)
+                .then(forecast => {
+                    postForecast(locationId, forecast);
+                })
         })
         .catch(error => {
             console.log("Post Response:");
@@ -269,12 +301,13 @@ async function deleteLocation(locationId) {
 
 //Format  Location data
 function createLocationData(location) {
+    var city = location.address.city || location.address.town || location.address.village || '';
     return {
         lat: location.lat,
         lon: location.lon,
         name: location.name,
         display_name: location.display_name,
-        city: location.address.city,
+        city: city,
         county: location.address.county,
         state: location.address.state,
         country: location.address.country,
@@ -309,6 +342,7 @@ async function postForecast(locationId,forecast) {
         headers: { 'Content-Type': "application/json" },
         body: JSON.stringify(createForecastData(forecast)), // Send the location object directly
     })
+    /*
         .then(response => {
             console.log("POST REQUEST");
             console.log(response.json());
@@ -325,7 +359,7 @@ async function postForecast(locationId,forecast) {
             console.log("Post Response:");
             console.log(JSON.stringify(createForecastData(forecast)));
             console.error('Error fetching data:', error);
-        });
+        });*/
 }
 
 // Function to send location data to a server
@@ -367,15 +401,8 @@ async function deleteForecast(locationId) {
 
 //Format  Forecast data
 function createForecastData(forecast) {
-    const now = new Date(Date.now());
 
-    // Extract year, month, and day
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
-    const day = now.getDate().toString().padStart(2, '0');
-
-    // Format as 'YYYY-MM-DD'
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = todayFormated();
 
     return {
         creation_date: formattedDate,
@@ -391,3 +418,18 @@ function createForecastData(forecast) {
         weather_code_array:forecast.daily.weathercode,
     };
 }
+
+function todayFormated() {
+    const now = new Date(Date.now());
+
+    // Extract year, month, and day
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = now.getDate().toString().padStart(2, '0');
+
+    // Format as 'YYYY-MM-DD'
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+
+}
+

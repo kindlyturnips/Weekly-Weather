@@ -7,14 +7,16 @@ namespace Weekly_Weather.Models
     public class Forecast
     {
         [Key]
-        public int? ForecastId { get; set; }
-
         [ForeignKey("Location")]
-        public int? LocationId { get; set; }
+        public int? ForecastId { get; set; }
+        //[ForeignKey("Location")]
+        // public int? LocationId { get; set; }
 
 
         //Parent Child Relationship
-        //public virtual Location? Location { get; set; }
+        //Cascade Delete Edit
+        [NotMapped]
+        public virtual Location? virtual_location { get; set; }
 
 
         //Forecast Parameters

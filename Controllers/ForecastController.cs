@@ -36,7 +36,7 @@ namespace Weekly_Weather.Controllers
             //Add UserID
             var userId = _userManager.GetUserId(User);
             var forecasts = await _context.Forecast
-                                          .Where(f => f.LocationId == id)
+                                          .Where(f => f.ForecastId == id)
                                           .ToListAsync();
             return Ok(forecasts);
         }
@@ -50,14 +50,15 @@ namespace Weekly_Weather.Controllers
             System.Diagnostics.Debug.WriteLine("Post Forecast");
 
             //Add UserID
-            forecast.LocationId = id;
+            forecast.ForecastId = id;
+            //forecast.ForecastId = id;
 
             //Add Forecast
-            
+
             _context.Forecast.Add(forecast);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("Post Forecast", new { id = forecast.ForecastId }, forecast);
-
+            //return CreatedAtAction("Post Forecast", forecast);
+            return RedirectToAction("Index");
         }
         // Update an existing location
         [HttpPut("{id}")]
@@ -69,10 +70,10 @@ namespace Weekly_Weather.Controllers
 
             
             //Add UserID
-            forecast.LocationId = id;
+            forecast.ForecastId = id;
             //Find Location
             var existing_forecast = await _context.Forecast
-                                           .FirstOrDefaultAsync(f => f.LocationId == id);
+                                           .FirstOrDefaultAsync(f => f.ForecastId == id);
 
             if (existing_forecast == null)
             {
@@ -104,7 +105,7 @@ namespace Weekly_Weather.Controllers
 
             //Find Location
             var existing_forecast = await _context.Forecast
-                                          .Where(l => l.LocationId == id)
+                                          .Where(l => l.ForecastId == id)
                                           .FirstOrDefaultAsync();
 
             //Remove

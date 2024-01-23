@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using Weekly_Weather.Controllers;
 using Weekly_Weather.Models;
 
 
@@ -28,9 +29,6 @@ builder.Services.AddControllersWithViews(options =>
 });
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
-
-
-
 
 //***DB Context
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -63,7 +61,8 @@ builder.Services
    .AddIdentityCore<User>()//(options => options.SignIn.RequireConfirmedAccount = true)
    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+//Realtime Updating
+//builder.Services.AddSignalR();
 
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -86,8 +85,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+//Weather Hub Within HomeController
+//app.MapHub<WeatherHub>("/weatherHub");
 
 //***API Routing Configuration. 
 
@@ -96,7 +97,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapRazorPages(); 
+    endpoints.MapRazorPages();
 });
 
 

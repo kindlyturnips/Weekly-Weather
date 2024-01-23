@@ -5,16 +5,20 @@ namespace Weekly_Weather.Models
 {
     public class Location
     {
+        //Cascade Delete Edit
         [Key]
+        //[ForeignKey("Location")]
         public int? LocationId { get; set; }
 
         //Microsoft Identity
         [ForeignKey("ApplicationUser")]
         public string? UserId { get; set; }
-        
+
 
         //Parent Child Relationship
-        //public virtual Forecast? Forecast { get; set; }
+        //Cascade Delete Edit
+        [NotMapped]
+        public virtual Forecast? virtual_forecast { get; set; }
 
 
         //Location Parameters

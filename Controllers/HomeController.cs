@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Diagnostics;
 using Weekly_Weather.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Weekly_Weather.Controllers
 {
@@ -25,19 +26,11 @@ namespace Weekly_Weather.Controllers
 
         public IActionResult Index()
         {
-
+            /**/
             var userId = _userManager.GetUserId(User);
-            var locations =  GetLocations().Result;
+            var locations = GetLocations().Result;
             System.Diagnostics.Debug.AutoFlush = true;
             System.Diagnostics.Debug.WriteLine("Home Controller");
-
-            foreach(var location in locations)
-            {
-                System.Diagnostics.Debug.WriteLine(location.city);
-                System.Diagnostics.Debug.WriteLine(location);
-                //System.Diagnostics.Debug.WriteLine(location.forecast[0].sunrise_array);
-            }
-
 
             return View(locations);
         }
@@ -52,13 +45,11 @@ namespace Weekly_Weather.Controllers
             foreach (var location in locations)
             {
                 location.forecast = await _context.Forecast
-                                          .Where(l => l.LocationId == location.LocationId)
+                                          .Where(l => l.ForecastId == location.LocationId)
                                           .ToListAsync();
             }
-                return locations;
+            return locations;
         }
-
-
 
         public IActionResult Privacy()
         {
@@ -71,8 +62,10 @@ namespace Weekly_Weather.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        
-
     }
+
+
+
 }
+
+ 

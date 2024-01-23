@@ -158,10 +158,7 @@ namespace Weekly_Weather.Migrations
             modelBuilder.Entity("Weekly_Weather.Models.Forecast", b =>
                 {
                     b.Property<int?>("ForecastId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("ForecastId"));
 
                     b.Property<int?>("LocationId")
                         .HasColumnType("int");
@@ -379,14 +376,24 @@ namespace Weekly_Weather.Migrations
 
             modelBuilder.Entity("Weekly_Weather.Models.Forecast", b =>
                 {
+                    b.HasOne("Weekly_Weather.Models.Location", "virtual_location")
+                        .WithOne("virtual_forecast")
+                        .HasForeignKey("Weekly_Weather.Models.Forecast", "ForecastId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Weekly_Weather.Models.Location", null)
                         .WithMany("forecast")
                         .HasForeignKey("LocationId");
+
+                    b.Navigation("virtual_location");
                 });
 
             modelBuilder.Entity("Weekly_Weather.Models.Location", b =>
                 {
                     b.Navigation("forecast");
+
+                    b.Navigation("virtual_forecast");
                 });
 #pragma warning restore 612, 618
         }

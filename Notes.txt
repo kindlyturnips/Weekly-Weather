@@ -1,19 +1,23 @@
 ﻿To Do:
 
 CLIENT
-	site.js
-	Buttons to Add
+	~TO DO~
+	Buttons
 		Location
 		-Delete Location: Delete Location & Delete Forecasts
-
-	Functionality
-		Fetching Weather Forecast
-			-Migrate to Server?
 
 		On Login
 			-Get Locations
 			-Check Forecast Creation Date vs. Current Time.  Used in Put Forecasts also
 			-Put Forecast If Older
+
+		Refresh Functionality
+			*-Update View functionality.  Have Client render the HTML to display forecasts
+
+	✓COMPLETED✓
+	Functionality
+		Fetching Weather Forecast
+			✓-Migrate to Server (Decided Against)
 
 		✓Forecast
 			✓-Get
@@ -29,44 +33,13 @@ CLIENT
 		✓Search Bar
 			✓-Search by City
 
+
+
 SERVER
+	~TO DO~
 	+MODEL
-		Forecast
-			✓-Add Creation Date of Forecast Parameter
-			✓-New Migration
-			✓-Add Weather Code
-
-		Parent Child Relationship?
-		-When setting up cascade delete & Upon Migration, Recieve the following warning.
-
-		The foreign key property 'Forecast.LocationId1' was created in shadow state because a conflicting property with the simple name 
-		'LocationId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible 
-		with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
-		
-		Works well, but would like to address this issue
-		
-		-Also creating the Cascade Delete Migration breaks API
-		public virtual Forecast? Forecast { get; set; }
-		public virtual Location? Location { get; set; }
-
-		May need to update API Functionality
-
-
-	+FUNCTIONALITY
-			Fetching Weather Forecast
-				-Migrate to Server?
-	+CONTROLLER
 		Location
-			✓-Configure Put
-			-Configure Put on dependent records (Forecast)
-			✓-Configure Delete
-			-Configure Put on dependent records (Forecast)
-		Forecast
-			✓-Configure Get
-			✓-Configure Post
-			✓-Configure Put
-			✓-Configure Delete
-
+			-Check if Location Exists
 	+VIEW
 		Buttons
 			-Delete Location
@@ -77,9 +50,41 @@ SERVER
 			-Make App Look good
 			✓-WeatherCode displays Appropriate Icon
 			-Change spacings & Fonts to scale with page
+
+
+		✓COMPLETED✓
+	+MODEL
+		Forecast
+			✓-Add Creation Date of Forecast Parameter
+			✓-New Migration
+			✓-Add Weather Code
+
+		Parent Child Relationship?
+			✓-Cascade delete
+
+	+FUNCTIONALITY
+			Fetching Weather Forecast
+				✓-Migrate to Server? (Decided Against)
+				✓-Functionality Breaks when Tables of Database are Empty.*
+
+	+CONTROLLER
+		Location
+			✓-Configure Put
+			✓-Configure Delete
+		Forecast
+			✓-Configure Get
+			✓-Configure Post
+			✓-Configure Put
+			✓-Configure Delete
+
+
 	
-		Refresh Functionality
-			-Update View functionality
+
+
+
+
+
+
 
 
 

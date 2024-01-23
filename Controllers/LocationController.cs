@@ -49,6 +49,18 @@ namespace Weekly_Weather.Controllers
             return Ok(locations);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var location = await _context.Location.FindAsync(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(location);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Post( Location location)
@@ -64,7 +76,9 @@ namespace Weekly_Weather.Controllers
             //Add Location
             _context.Location.Add(location);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("Post Location", new { id = location.LocationId }, location);
+
+            return CreatedAtAction(nameof(GetById), new { id = location.LocationId }, location);
+        
         }
 
 

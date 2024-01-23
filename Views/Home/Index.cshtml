@@ -73,38 +73,45 @@
     { 90, "Hail" }, { 91, "Thunderstorm" }, { 92, "Thunderstorm" }, { 93, "Mixed Precip" }, { 94, "Mixed Precip" }, { 95, "Thunderstorm" }, { 96, "Thunderstorm" }, { 97, "Thunderstorm" }, { 98, "Thunderstorm" }, { 99, "Thunderstorm" }
 
         };
-    } 
-   
+    }
+    
+    
     <!-- Display Weather Code -->
     @foreach (var location in Model)
     {
-        var forecast = location.forecast[0];
+ 
+        
         <div class="forecast-display" data-city="@location.city" data-lat="@location.lat" data-lon="@location.lon">
             <h2 class="forecast-city"> @location.city</h2>
             <button class="close" type="button" onclick="deleteLocation(@location.LocationId)">✖</button>
             <p>@location.LocationId </p>
-
         </div>
+
+        @if (location.forecast.Count > 0)
+        {
+            System.Diagnostics.Debug.AutoFlush = true;
+            System.Diagnostics.Debug.WriteLine("Forecast Exists");
+            System.Diagnostics.Debug.WriteLine(location.forecast);
+
             <div class="forecast-data">
-                @for(int i = 0; i < 7; i++)
+                @for (int i = 0; i < 7; i++)
                 {
-                    
-                <div class="forecast-day">
-                    <p>@forecast.date_array[i].Substring(5,5)</p>
-                    <p>High </p>
-                    <p>@forecast.temperature_2m_max_array[i] @forecast.temperature_2m_units</p>
-                    <p>Low </p>
-                    <p>@forecast.temperature_2m_min_array[i] @forecast.temperature_2m_units</p>
+                    var forecast = location.forecast[0];
+                    <div class="forecast-day">
+                        <p>@forecast.date_array[i].Substring(5,5)</p>
+                        <p>High </p>
+                        <p>@forecast.temperature_2m_max_array[i] @forecast.temperature_2m_units</p>
+                        <p>Low </p>
+                        <p>@forecast.temperature_2m_min_array[i] @forecast.temperature_2m_units</p>
                         <p>@WMOCodetoDescriptionMap[@forecast.weather_code_array[i]]</p>
                         <i class="wi @weatherCodeToIconMap[@forecast.weather_code_array[i]]"></i>
 
-                </div>
+                    </div>
                 }
             </div>
-        <br />
-      
+            <br />
+        }
     }
-
 
 
 
