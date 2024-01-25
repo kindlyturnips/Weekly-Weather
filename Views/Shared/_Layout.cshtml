@@ -1,76 +1,45 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character set and responsive design -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Page title, dynamically set using ViewData -->
     <title>@ViewData["Title"] - Weather_App</title>
-
     <!-- Stylesheets -->
-    <!-- Bootstrap CSS for styling and layout -->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- Custom site CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <!-- OpenLayers CSS for map functionality -->
-    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.5.0/css/ol.css" type="text/css">
 </head>
 <body>
-    <!-- Header section with navigation -->
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <!-- Brand/logo link -->
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Weather_App</a>
-                <!-- Hamburger menu for mobile view -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Weekly Weather</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <!-- Navigation links -->
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                     </ul>
-                    <!-- Login partial view -->
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <!-- Main content area -->
     <div class="container">
         <main role="main" class="pb-3">
-            <!-- Placeholder for the main view content -->
             @RenderBody()
         </main>
     </div>
 
-    <!-- Footer section -->
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <!-- Footer content with copyright and privacy link -->
-            &copy; 2023 - Weather_App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <!-- Scripts -->
-    <!-- jQuery script for interactivity -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap Bundle JS for functionality -->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom site JS -->
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <!-- Optional section for additional scripts -->
     @await RenderSectionAsync("Scripts", required: false)
-    <!-- OpenLayers JS for map functionality -->
-    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.5.0/build/ol.js"></script>
 
 </body>
 </html>

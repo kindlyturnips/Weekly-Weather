@@ -1,133 +1,56 @@
-﻿// This script provides functionalities for geocoding addresses, retrieving weather forecasts,
-// and handling location data in a web application.
+﻿//////////////////////////////////////////////////////////////////////////////////////
+//          STARTUP                                                                 //
+//////////////////////////////////////////////////////////////////////////////////////
 
-// Global array to store multiple locations
-
-//Update Location
-
-
-//Update Forecasts on Login
+//Check & Refresh Forecasts
 getLocation().then(locations => {
-    console.log("Locations: ", locations);   
     var today = todayFormated();
-    for (var i in locations) {
-        getForecast(locations[i].locationId).then(forecast => {           
+    for (let i in locations) {
+        getForecast(locations[i].locationId).then(forecast => {
             if (forecast[0].creation_date != today) {
                 fetchWeatherForecast(locations[i].lat, locations[i].lon).then(new_forecast => {
-                    console.log("Updating Forecast");
                     putForecast(locations[i].locationId, new_forecast);
-                });             
-            }    
+                });
+            }
         });
     }
 });
 
-
-
-/*
-document.addEventListener("DOMContentLoaded", function () {
-    var forecastElements = document.querySelectorAll('.forecast-display');
-
-    forecastElements.forEach(element => {
-        var city = element.getAttribute('data-city');
-        var latitude = element.getAttribute('data-lat');
-        var longitude = element.getAttribute('data-lon');
-
-        fetchWeatherForecast(latitude, longitude)
-            .then(data => {
-                // Handle the fetched data for each location
-                //displayForecast(data, element.querySelector('.forecast-data'));
-                console.log(data);
-            })
-            .catch(error => {
-                // Handle any errors
-                console.error(error);
-            });
-    });
-});*/
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////
-//          SEARCH BAR AND API TESTING                                              //
+//          SEARCH BAR                                                              //
 //////////////////////////////////////////////////////////////////////////////////////
 
-// Function to geocode an address entered by the user.
+
+//Geocode Address
 function geocodeAddress() {
     var address = document.getElementById('addressSearch').value;
-
-    // Only proceed if the address field is not empty
     if (address !== '') {
-        // Construct the URL for the geocoding request
         var geocodingUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address);
 
-        // Perform an AJAX request to the geocoding service
         fetch(geocodingUrl)
             .then(response => response.json())
             .then(data => {
-                // Proceed only if there are results
                 if (data.length > 0) {
-                    var result = data[0]; // First result from the geocoding response
+                    var result = data[0];
 
-                    // Retrieve and process the location details
-                    var location = fetchLocation(result.lat, result.lon).then(location => {
-                        //Server API Requests
-                        postLocation(location)
-
-                        //getLocation();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching location:', error);
-                    });
-
-
-
-                    // Convert the coordinates for map projection
-                    var coord = ol.proj.fromLonLat([parseFloat(result.lon), parseFloat(result.lat)]);
-
-
-                } else {
-                    // Alert if no results were found for the address
-                    alert("Address not found!");
+                    // Fetch location and then post it to the server
+                    fetchLocation(result.lat, result.lon)
+                        .then(location => {
+                            return postLocation(location);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching location:', error);
+                        });
                 }
             })
             .catch(error => {
-                // Handle errors during geocoding
-                console.error('Error during geocoding', error);
+                console.error('Error during geocoding:', error);
                 alert("An error occurred during geocoding.");
             });
     }
 }
+
  
-async function Test() {
-    const locations = await getLocation();
-    console.log("Test Locations:", locations);
-
-    for (var location of locations) {
-        console.log(location.city);
-        const forecast = await fetchWeatherForecast(location.lat, location.lon);
-        console.log("Test Forecast:", forecast);
-        const forecast_json = createForecastData(forecast);
-        console.log("Test Forecast JSON 1:", forecast_json);
-        postForecast(location.locationId, forecast);
-        //deleteLocation(3);
-
-    }
-    
-
-
-
-
-    //const get_forecast1 = await getForecast(get_locations[0].locationId);
-    //console.log("Test Get Forecast:", get_forecast1)
-    
-
-}
 //////////////////////////////////////////////////////////////////////////////////////
 //          CLIENT -> EXTERNAL API FUNCTIONALITY                                    //
 //////////////////////////////////////////////////////////////////////////////////////
@@ -140,8 +63,6 @@ async function fetchLocation(lat, lon) {
     try {
         let response = await fetch(reverseGeocodingUrl);
         let data = await response.json();
-        console.log("Location")
-        console.log(data)
         return data;
     } catch (error) {
         console.error('Error during reverse geocoding:', error);
@@ -163,86 +84,44 @@ async function fetchWeatherForecast(latitude, longitude) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        //console.log(response.json());
-        return await response.json(); // Returns the weather forecast data
+        return await response.json();
     } catch (error) {
         console.error('Error fetching the weather data:', error);
     }
 }
 
-function displayForecast(forecastData, element) {
-    if (!forecastData || !element) return;
-
-    // Clear existing content
-    element.innerHTML = '';
-
-    // Assuming the forecast data has a 'daily' property
-    let dailyForecast = forecastData.daily;
-    let time = dailyForecast.time;
-    let maxTemps = dailyForecast.temperature_2m_max;
-    let minTemps = dailyForecast.temperature_2m_min;
-    let weatherCodes = dailyForecast.weathercode;
-
-    for (let i = 0; i < maxTemps.length; i++) {
-        let forecastElement = document.createElement('div');
-        forecastElement.className = 'daily-forecast';
-        forecastElement.dataset.weatherCode = weatherCodes[i];
-
-        // Format the display of each day's forecast
-        forecastElement.innerHTML = `
-            <div class="forecast-day">
-            <p>${time[i].slice(5)}:</p>
-            <p>Max Temp: ${maxTemps[i]}°C</p>
-            <p>Min Temp: ${minTemps[i]}°C</p>
-            <p>Weather: ${weatherCodes[i]}</p>
-            </div>
-            
-        `;
-        //<p>Weather: ${getWeatherDescription(weatherCodes[i])}</p>
-
-        element.appendChild(forecastElement);
-    }
-}
 
 
 //////////////////////////////////////////////////////////////////////////////////////
 //          CLIENT -> SERVER LOCATION FUNCTIONALITY                                 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-// Function to send location data to a server
+// Function to get location data
 async function getLocation() {
     try {
         const response = await fetch('/api/location/', { method: 'GET' });
-        console.log("GET REQUEST");
-
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
-        const data = await response.json(); // Wait for the JSON parsing to complete
-        console.log('Data received:', data);
-        return data; // Return the parsed data
+        const data = await response.json(); 
+        return data; 
     } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error; // Re-throw the error to be caught by the caller
+        throw error; 
     }
 }
-// Function to send location data to a server
+// Function to post location data 
 async function postLocation(location) {
     fetch('/api/location/', {
         method: "POST",
         headers: { 'Content-Type': "application/json" },
-        body: JSON.stringify(createLocationData(location)), // Send the location object directly
+        body: JSON.stringify(createLocationData(location)),
     })
         .then(response => {
-            console.log("POST REQUEST");
-            console.log("Post Json: ", )
-            console.log(createLocationData(location));
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const locationUrl = response.headers.get('Location');
-            //console.log('Location header:', response.headers.get('Location'));
             return { response: response, locationUrl: locationUrl };
         })
         .then(({ response, locationUrl }) => {
@@ -250,6 +129,9 @@ async function postLocation(location) {
             fetchWeatherForecast(location.lat, location.lon)
                 .then(forecast => {
                     postForecast(locationId, forecast);
+                })
+                .then(data => {
+                    window.location.reload(true);
                 })
         })
         .catch(error => {
@@ -259,7 +141,7 @@ async function postLocation(location) {
         });
 }
 
-// Function to send location data to a server
+// Function to put location data 
 async function putLocation(locationId, location) {
     fetch('/api/location/' + locationId, {
         method: 'PUT',
@@ -267,8 +149,6 @@ async function putLocation(locationId, location) {
         body: JSON.stringify(createLocationData(location)),
     })
         .then(response => {
-            console.log("PUT REQUEST");
-            console.log(response.json());
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -276,16 +156,13 @@ async function putLocation(locationId, location) {
             return response;
         })
         .then(data => {
-            console.log('Data received:', data);
         })
         .catch(error => {
-            console.log("Post Response:");
-            console.log(JSON.stringify(createLocationData(location)));
             console.error('Error fetching data:', error);
         });
 }
 
-// Function to send location data to a server
+// Function to delete location data
 async function deleteLocation(locationId) {
     fetch('/api/location/' + locationId, {
         method: 'DELETE',
@@ -294,12 +171,13 @@ async function deleteLocation(locationId) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+        }).then(data => {
+            window.location.reload(true);
         });
 
 }
 
-
-//Format  Location data
+//Function to format location data
 function createLocationData(location) {
     var city = location.address.city || location.address.town || location.address.village || '';
     return {
@@ -319,50 +197,37 @@ function createLocationData(location) {
 //////////////////////////////////////////////////////////////////////////////////////
 //           CLIENT -> SERVER FORECAST FUNCTIONALITY                                //
 //////////////////////////////////////////////////////////////////////////////////////
+
+// Function to get forecast data
 async function getForecast(locationId) {
     try {
         const response = await fetch('/api/forecast/' + locationId, { method: 'GET' });
-        console.log("GET REQUEST");
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 
-        const data = await response.json(); // Wait for the JSON parsing to complete
+        const data = await response.json();
         console.log('Data received:', data);
-        return data; // Return the parsed data
+        return data;
     } catch (error) {
         console.error('Error fetching data:', error);
-        throw error; // Re-throw the error to be caught by the caller
+        throw error;
     }
 }
+
+// Function to post forecast data
 async function postForecast(locationId,forecast) {
     fetch('/api/forecast/' + locationId, {
         method: "POST",
         headers: { 'Content-Type': "application/json" },
-        body: JSON.stringify(createForecastData(forecast)), // Send the location object directly
+        body: JSON.stringify(createForecastData(forecast)), 
     })
-    /*
-        .then(response => {
-            console.log("POST REQUEST");
-            console.log(response.json());
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            console.log(response);
-            return response;
-        })
-        .then(data => {
-            console.log('Data received:', data);
-        })
-        .catch(error => {
-            console.log("Post Response:");
-            console.log(JSON.stringify(createForecastData(forecast)));
-            console.error('Error fetching data:', error);
-        });*/
+    return data
+
 }
 
-// Function to send location data to a server
+//Function to put forecast data
 async function putForecast(locationId, forecast) {
     fetch('/api/forecast/' + locationId, {
         method: 'PUT',
@@ -370,7 +235,6 @@ async function putForecast(locationId, forecast) {
         body: JSON.stringify(createForecastData(forecast)),
     })
         .then(response => {
-            console.log("PUT REQUEST");
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -381,13 +245,11 @@ async function putForecast(locationId, forecast) {
             console.log('Data received:', data);
         })
         .catch(error => {
-            console.log("Put Response:");
-            console.log(JSON.stringify(createForecastData(forecast)));
             console.error('Error fetching data:', error);
         });
 }
 
-// Function to send location data to a server
+// Function to delete forecast data
 async function deleteForecast(locationId) {
     fetch('/api/forecast/' + locationId, {
         method: 'DELETE',
@@ -399,7 +261,7 @@ async function deleteForecast(locationId) {
         });
 }
 
-//Format  Forecast data
+//Function to format forecast data
 function createForecastData(forecast) {
 
     const formattedDate = todayFormated();
@@ -419,6 +281,7 @@ function createForecastData(forecast) {
     };
 }
 
+//Function to format dates
 function todayFormated() {
     const now = new Date(Date.now());
 
@@ -430,6 +293,4 @@ function todayFormated() {
     // Format as 'YYYY-MM-DD'
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
-
 }
-

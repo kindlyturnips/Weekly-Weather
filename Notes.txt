@@ -1,20 +1,21 @@
 ﻿To Do:
 
+DOCUMENT & COMMENT
+
+
 CLIENT
 	~TO DO~
+	...
+	✓COMPLETED✓
 	Buttons
 		Location
-		-Delete Location: Delete Location & Delete Forecasts
+		✓-Delete Location: Delete Location & Delete Forecasts
 
 		On Login
-			-Get Locations
-			-Check Forecast Creation Date vs. Current Time.  Used in Put Forecasts also
-			-Put Forecast If Older
+			✓-Get Locations
+			✓-Check Forecast Creation Date vs. Current Time.  Used in Put Forecasts also
+			✓-Put Forecast If Older
 
-		Refresh Functionality
-			*-Update View functionality.  Have Client render the HTML to display forecasts
-
-	✓COMPLETED✓
 	Functionality
 		Fetching Weather Forecast
 			✓-Migrate to Server (Decided Against)
@@ -33,31 +34,30 @@ CLIENT
 		✓Search Bar
 			✓-Search by City
 
-
-
 SERVER
 	~TO DO~
-	+MODEL
-		Location
-			-Check if Location Exists
+
 	+VIEW
 		Buttons
-			-Delete Location
-			-Refresh Forecast
+			✓-Delete Location
 			-Change Units 
 
+	✓COMPLETED✓
+		
 		Asthetics 
-			-Make App Look good
+			✓-Add Day of the Week
+			✓-Make App Look good...enough
 			✓-WeatherCode displays Appropriate Icon
-			-Change spacings & Fonts to scale with page
 
 
-		✓COMPLETED✓
 	+MODEL
 		Forecast
 			✓-Add Creation Date of Forecast Parameter
 			✓-New Migration
 			✓-Add Weather Code
+
+		Location
+			✓-Check if Location Exists	
 
 		Parent Child Relationship?
 			✓-Cascade delete
@@ -66,6 +66,9 @@ SERVER
 			Fetching Weather Forecast
 				✓-Migrate to Server? (Decided Against)
 				✓-Functionality Breaks when Tables of Database are Empty.*
+				
+			Refresh Functionality
+				✓-Update View functionality.
 
 	+CONTROLLER
 		Location

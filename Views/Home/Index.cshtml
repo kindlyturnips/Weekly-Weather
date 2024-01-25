@@ -24,15 +24,15 @@
 <body>
     <!-- Page Header -->
     <div class="text-center">
-        <h1 class="display-4">Welcome to Chris's Weather Application</h1>
+        <h1 class="display-4">Weekly Weather</h1>
     </div>
     <!-- Search Bar with Autocomplete -->
     <div class="search-bar">
         <input type="text" id="addressSearch" placeholder="Enter a City">
-        <button onclick="geocodeAddress()">Add</button>
+        <button class="Add" onclick="geocodeAddress()">Add</button>
     </div>
+    <br />
 
-    <button type="button" onclick="Test()">Test</button>
     @*
     Map Display 
     <div id="map" class="map" style="width: 100%; height: 500px;"></div>
@@ -75,16 +75,14 @@
         };
     }
     
-    
+    <div id="forecast-content">
     <!-- Display Weather Code -->
     @foreach (var location in Model)
     {
- 
-        
         <div class="forecast-display" data-city="@location.city" data-lat="@location.lat" data-lon="@location.lon">
-            <h2 class="forecast-city"> @location.city</h2>
+            <h2 class="forecast-city"> @location.city, @location.state</h2>
             <button class="close" type="button" onclick="deleteLocation(@location.LocationId)">✖</button>
-            <p>@location.LocationId </p>
+
         </div>
 
         @if (location.forecast.Count > 0)
@@ -98,11 +96,22 @@
                 {
                     var forecast = location.forecast[0];
                     <div class="forecast-day">
+                        @{
+                                int year = Int32.Parse(forecast.date_array[i].Substring(0, 4)); // Substring starting at index 0, length 4
+                                int month = Int32.Parse(forecast.date_array[i].Substring(5, 2)); // Substring starting at index 5, length 2
+                                int day = Int32.Parse(forecast.date_array[i].Substring(8, 2)); // Substring starting at index 8, length 2
+                                DateTime dateValue = new DateTime(year,month,day);
+                        }
+
+                        <p>@dateValue.ToString("ddd")</p>
                         <p>@forecast.date_array[i].Substring(5,5)</p>
+                        <hr>
                         <p>High </p>
                         <p>@forecast.temperature_2m_max_array[i] @forecast.temperature_2m_units</p>
+                        <hr>
                         <p>Low </p>
                         <p>@forecast.temperature_2m_min_array[i] @forecast.temperature_2m_units</p>
+                        <hr>
                         <p>@WMOCodetoDescriptionMap[@forecast.weather_code_array[i]]</p>
                         <i class="wi @weatherCodeToIconMap[@forecast.weather_code_array[i]]"></i>
 
@@ -112,7 +121,7 @@
             <br />
         }
     }
-
+    </div>
 
 
 

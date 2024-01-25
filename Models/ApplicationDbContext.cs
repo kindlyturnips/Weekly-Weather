@@ -8,7 +8,6 @@ namespace Weekly_Weather.Models
         //Configuration for Connection String
         private readonly IConfiguration _configuration;
 
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -20,22 +19,15 @@ namespace Weekly_Weather.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Define the primary key for the 'Locations' entity.
-
             modelBuilder.Entity<Location>().HasKey(l => l.LocationId);
-            //modelBuilder.Entity<Forecast>().HasKey(f => f.LocationId);
-
+            //Set one to one relationship between location & forecast
             modelBuilder.Entity<Location>()
                    .HasOne(l => l.virtual_forecast)
                    .WithOne(f => f.virtual_location)
                    .HasForeignKey<Forecast>(f => f.ForecastId)
                    .OnDelete(DeleteBehavior.Cascade);
 
-  
-
             base.OnModelCreating(modelBuilder);
-
-
         }
-
     }
 }

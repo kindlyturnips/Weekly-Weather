@@ -1,3 +1,4 @@
+/* General Formatting */
 html {
     font-size: 14px;
 }
@@ -22,22 +23,22 @@ body {
     background-color: #63b5f1;
 }
 
-/* .forecast-display {
-    border: 1px solid #ccc;
-    margin: 10px;
-}*/
+/* Add City */
+.add {
+    position: relative;
+    align-self: flex-end;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+}
 
-
-
-
-
-/* Weather card styling */
+/* Forecast Card */
 .forecast-display {
     display:  flex;
     justify-content: center;
-    width: 1000px;
+    width: 800px;
     background: #FFFFFF;
-    border-radius: 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     font-size: 14px;
@@ -47,37 +48,31 @@ body {
     margin: 0;
     flex-grow: 1;
 }
+
+/* Remove City */
 .close {
     position: relative;
     align-self: flex-end;
     width: 32px;
     height: 32px;
-    cursor: pointer; /* Change mouse cursor on hover */
-    transition: all 0.3s; /* Smooth transition for hover effects */
     border: none;
     background: none;
-}
-.close:hover {
-    opacity: 1; /* Slightly change color on hover */
 }
 
 .forecast-data {
     display: flex;
-    width: 1000px;
+    width: 800px;
     background: #FFFFFF;
-    border-radius: 40px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     font-size: 20px;
-    gap:50px;
+    gap: 50px;
 }
-
 
 .forecast-day {
     position: relative;
-    text-align: center; /* Center the text within each forecast */
+    text-align: center; 
 }
 
     .forecast-day p {
-        margin: 10px 0; /* Space out the paragraphs a bit */
+        margin: 10px 0; 
     }

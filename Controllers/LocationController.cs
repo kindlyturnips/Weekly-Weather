@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Weekly_Weather.Models;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using System.Linq;
-using Microsoft.Build.Evaluation;
-//using Microsoft.CodeAnalysis;
-//using Microsoft.CodeAnalysis;
 
 
 namespace Weekly_Weather.Controllers
@@ -20,18 +14,12 @@ namespace Weekly_Weather.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<LocationController> _logger;
-        //private readonly Location location;
-
 
         public LocationController(ApplicationDbContext context, UserManager<User> userManager, ILogger<LocationController> logger)
         {
             _context = context;
             _userManager = userManager;
-            _logger = logger;
-
         }
-
 
         // Get all locations for the current user
         [HttpGet]
@@ -49,6 +37,7 @@ namespace Weekly_Weather.Controllers
             return Ok(locations);
         }
 
+        // Get all location by id
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -61,7 +50,7 @@ namespace Weekly_Weather.Controllers
             return Ok(location);
         }
 
-
+        //Post location
         [HttpPost]
         public async Task<IActionResult> Post( Location location)
         {
@@ -73,23 +62,30 @@ namespace Weekly_Weather.Controllers
             var userId = _userManager.GetUserId(User); 
             location.UserId = userId;
 
-            //Add Location
-            _context.Location.Add(location);
-            await _context.SaveChangesAsync();
+            //Check if location exists
+            var existing_location = await _context.Location
+                                          .Where(l => l.UserId == userId && l.lat == location.lat && l.lon == location.lon)
+                                          .FirstOrDefaultAsync();
+            if (existing_location != null)
+            {
+                System.Diagnostics.Debug.WriteLine("Location Exists");
+                return NoContent();
+            }
 
+            //Add Location
+             _context.Location.Add(location);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = location.LocationId }, location);
-        
         }
 
 
-        // Update an existing location
+        // Put location
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Location location)
         {
             //Check
             System.Diagnostics.Debug.AutoFlush = true;
             System.Diagnostics.Debug.WriteLine("Put Location");
-
 
             //Add UserID
             var userId = _userManager.GetUserId(User);
@@ -122,14 +118,12 @@ namespace Weekly_Weather.Controllers
             System.Diagnostics.Debug.AutoFlush = true;
             System.Diagnostics.Debug.WriteLine("Delete Location");
 
-
             //Add UserID
             var userId = _userManager.GetUserId(User);
             //Find Location
             var existing_location = await _context.Location
                                           .Where(l => l.UserId == userId && l.LocationId == id)
                                           .FirstOrDefaultAsync();
-
             //Remove
             _context.Location.Remove(existing_location); // Remove the location from the context
             await _context.SaveChangesAsync(); // Save the changes to the database

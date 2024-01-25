@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using System.Diagnostics;
 using Weekly_Weather.Models;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Weekly_Weather.Controllers
 {
@@ -15,23 +13,19 @@ namespace Weekly_Weather.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ApplicationDbContext context, UserManager<User> userManager, ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _logger = logger;
         }
 
+        //Home Page
         public IActionResult Index()
         {
-            /**/
             var userId = _userManager.GetUserId(User);
             var locations = GetLocations().Result;
-            System.Diagnostics.Debug.AutoFlush = true;
-            System.Diagnostics.Debug.WriteLine("Home Controller");
-
+            locations.Reverse();
             return View(locations);
         }
 
@@ -51,17 +45,14 @@ namespace Weekly_Weather.Controllers
             return locations;
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        //Handle Errors
         [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 
 

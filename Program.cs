@@ -1,20 +1,12 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
-using Weekly_Weather.Controllers;
 using Weekly_Weather.Models;
 
-
 var builder = WebApplication.CreateBuilder(args);
-//Logging
-//builder.Logging.ClearProviders();
-//builder.Logging.AddConsole();
-
 
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
@@ -30,68 +22,36 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddRazorPages()
     .AddMicrosoftIdentityUI();
 
-//***DB Context
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Weekly_WeatherContext>();
-//**User Identity Context
-/*
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-//Added Scaffolding
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<Weekly_WeatherContext>()
-    .AddDefaultTokenProviders();
-builder.Services.AddDbContext<Weekly_WeatherContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Weekly_WeatherContextConnection")));
-*/
-//builder.Services.AddDefaultIdentity<UserModel>()
-//    .AddMicrosoftIdentityUI();
-
-
-// DB Context - Choose the appropriate one
+// DB Context 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity Services - Use either AddDefaultIdentity or AddIdentity, but not both
-//Use AddIdentiyCore, not AddIdenty, not AddDefaultIdentity
+// Identity Services
 builder.Services
    .AddIdentityCore<User>()//(options => options.SignIn.RequireConfirmedAccount = true)
    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-//Realtime Updating
-//builder.Services.AddSignalR();
-
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Identity/Account/Login"; // Set this to your actual login path
+    options.LoginPath = "/Identity/Account/Login";
 });
 
-
+//Build App
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//Weather Hub Within HomeController
-//app.MapHub<WeatherHub>("/weatherHub");
-
-//***API Routing Configuration. 
-
+//API Routing Configuration. 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -100,11 +60,8 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
 });
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
-
 app.Run();
