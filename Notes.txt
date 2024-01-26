@@ -81,8 +81,15 @@ SERVER
 			✓-Configure Delete
 
 
-	
 
+DOCKER
+ docker run -v shared_keys:/app/dataprotectionkeys -p 8000:80 -p 8001:433 --name myapp_pk weekly_weather
+ docker build -t weekly_weather -f Dockerfile "../Weekly Weather"
+	
+	
+	docker run --rm -it -p 8001:8001 -e ASPNETCORE_HTTPS_PORTS=8001 -e ASPNETCORE_ENVIRONMENT=Development -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v $env:USERPROFILE\.aspnet\https:/root/.aspnet/https/ weekly_weather
+
+	 docker run -v $env:APPDATA\microsoft\UserSecrets\:/root/.microsoft/usersecrets -v $env:USERPROFILE\.aspnet\https:/root/.aspnet/https/ -v shared_keys:/app/dataprotectionkeys -p 8001:8001 -e ASPNETCORE_HTTPS_PORTS=8001 -e ASPNETCORE_ENVIRONMENT=Development --name myapp_pk weekly_weather
 
 
 
