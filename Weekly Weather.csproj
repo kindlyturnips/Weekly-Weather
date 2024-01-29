@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Weekly_Weather-420fc164-3ae2-4055-99b2-ca590e431c38</UserSecretsId>
     <RootNamespace>Weekly_Weather</RootNamespace>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
+	  <!-- <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>-->
   </PropertyGroup>
 
   <ItemGroup>
