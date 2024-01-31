@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+    final:
+        tty: true
+        container_name: app
+        image: app
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: final
+        ports:
+            - "8001:433"
+        depends_on:
+            - migrations
+    
+    migrations:
+        tty: true    
+        container_name: service_migrations
+        image: service_migrations
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: migrations
+        depends_on:
+            - sqlserver
+
+    sqlserver:
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        user: root
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=HyejinKim<3
+            - MSQL_PID=Express
+        ports:
+            - "1433:1433"
+        volumes:
+          - sql_server_data:/var/opt/mssql/data
+          - sql_server_log:/var/opt/mssql/log
+          - sql_server_secrets:/var/opt/mssql/secrets
+
+volumes:
+  sql_server_data:
+  sql_server_log:
+  sql_server_secrets:
