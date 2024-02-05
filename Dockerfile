@@ -6,7 +6,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-
 #Build
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
@@ -22,15 +21,24 @@ RUN dotnet tool install --version 7.0.14 --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 ENTRYPOINT dotnet-ef database update --project /src/ --startup-project /src/
 
-
-
 #Production
 FROM build AS publish
 RUN dotnet publish "Weekly Weather.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM build AS final
+#Copy HTTPS Certs 
+WORKDIR /https
+COPY ["./Https/aspnetapp.pfx" ,  "./"]
+RUN update-ca-certificates
+#HTTPS Certs
+RUN dotnet dev-certs https --clean --import ./aspnetapp.pfx -p hyejin      
+RUN dotnet dev-certs https --check --trust
+
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENV ASPNETCORE_URLS=https://+:443
+
+#ENV ASPNETCORE_URLS=https://+:443 #Already Set in launchSettings.json
 ENTRYPOINT ["dotnet", "Weekly Weather.dll"]
+#ENTRYPOINT ["dotnet", "Weekly Weather.dll","--urls","http://*:8000;https://*:8001"]
+
 
