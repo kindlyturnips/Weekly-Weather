@@ -36,9 +36,6 @@ RUN dotnet dev-certs https --check --trust
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-#ENV ASPNETCORE_URLS=https://+:443 #Already Set in launchSettings.json
 ENTRYPOINT ["dotnet", "Weekly Weather.dll"]
-#ENTRYPOINT ["dotnet", "Weekly Weather.dll","--urls","http://*:8000;https://*:8001"]
 
 
