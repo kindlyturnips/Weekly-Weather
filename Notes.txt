@@ -81,13 +81,10 @@ SERVER
 			✓-Configure Delete
 
 
+DOCKER
+	Configure
+		-HTTPS Certificate
 	
-
-
-
-
-
-
 
 
 

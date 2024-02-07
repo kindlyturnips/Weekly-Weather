@@ -8,7 +8,7 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:8001",
-        //localhost:5205"
+
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -24,21 +24,20 @@
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80"
       },
+
       "publishAllPorts": true,
       "useSSL": true
     }
   },
- 
+
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      //"applicationUrl": "http://localhost:20796",
       "applicationUrl": "http://localhost:8000",
-
-      //"sslPort": 44329,
       "sslPort": 8001
-
+      "applicationUrl": "http://localhost:20796",
+      "sslPort": 44329
     }
   }
 }
