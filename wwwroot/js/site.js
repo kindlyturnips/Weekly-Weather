@@ -222,6 +222,8 @@ async function postForecast(locationId,forecast) {
         method: "POST",
         headers: { 'Content-Type': "application/json" },
         body: JSON.stringify(createForecastData(forecast)), 
+    }).then(data => {
+        window.location.reload(true);
     })
     return data
 
