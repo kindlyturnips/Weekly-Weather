@@ -8,7 +8,7 @@ Build
 
 To Run  
 	1. Requires Docker Desktop & WSL   
-	2. Requires Microsoft Azure AD / Microsoft Entra Verified ID (Currently configured for single tennent)   
+	2. Requires Microsoft Azure AD / Microsoft Entra Verified ID (Currently configured for single tenant)   
 	3. Check out  
 	4. Navigate to app directory in cmd  
 	5. docker-compose up -d  
