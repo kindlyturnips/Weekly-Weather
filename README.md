@@ -6,8 +6,9 @@ SQL Server
 
 To Run
 -Requires Docker Desktop & WSL
+-Requires Microsoft Azure AD 
 -Check out
 -Navigate to app directory
-- >docker-compose up -d
+-docker-compose up -d
 -Wait till service_migrations has completed & exited
 -In a web browser navigate to https://localhost:8001
