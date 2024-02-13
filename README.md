@@ -6,6 +6,7 @@ Build
 	EF Core   
 	SQL Server   
 
+Currently still in development. Microsoft Azure AD is configured for a single tenant (kindlyturnips) login.
 To Run  
 	1. Requires Docker Desktop & WSL   
 	2. Requires Microsoft Azure AD / Microsoft Entra Verified ID (Currently configured for single tenant)   
